@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Aurora Café — Café de especialidad en Buenos Aires. Granos de origen único, tostados a mano desde 2014." />
+    <title>Aurora · Café | Café de especialidad</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,600;1,700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+
+    <!-- NAV -->
+    <header class="nav" id="nav" role="banner">
+      <a class="nav-brand" href="#inicio">
+        Aurora <span class="dot">·</span><span class="cafe-label">Café</span>
+      </a>
+      <nav class="nav-links" aria-label="Navegación principal">
+        <a href="#historia">Historia</a>
+        <a href="#especialidades">Especialidades</a>
+        <a href="#granos">Granos</a>
+        <a href="#reposteria">Repostería</a>
+        <a href="#visita">Visita</a>
+      </nav>
+      <div class="nav-cta">
+        <span class="nav-phone">+54 11 6000&nbsp;1234</span>
+        <a class="btn-outline" href="https://wa.me/5491160001234" target="_blank" rel="noopener">Escribinos</a>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" id="inicio" aria-labelledby="hero-title">
+      <div class="hero-img-wrap">
+        <img src="img/hero-pour.jpg" alt="Barista sirviendo café con latte art en Aurora Café" loading="eager" />
+      </div>
+      <div class="hero-body">
+        <p class="eyebrow anim-fade-up" style="--d:0ms">Tostado a mano &middot; Desde 2014</p>
+        <h1 id="hero-title" class="anim-fade-up" style="--d:120ms">
+          <span class="typing" data-typing="hero" aria-label="El café que despierta historias."></span>
+        </h1>
+
+        <p class="hero-lead anim-fade-up" style="--d:240ms">
+          Granos de origen único, tostados lentamente y servidos con la calma de un ritual.
+          Un rincón donde el tiempo se sirve caliente.
+        </p>
+        <div class="hero-actions anim-fade-up" style="--d:360ms">
+          <a class="btn-amber" href="#especialidades">Explorar la carta &rarr;</a>
+          <a class="btn-ghost-text" href="#historia">Nuestra historia</a>
+        </div>
+        <div class="hero-rule anim-fade-up" style="--d:480ms" aria-hidden="true"></div>
+        <dl class="hero-stats anim-fade-up" style="--d:560ms" aria-label="En números">
+          <div>
+            <dt data-stat="count" data-target="12">0</dt>
+            <dd>Orígenes</dd>
+          </div>
+          <div>
+            <dt data-stat="count" data-target="48" data-suffix="h">0</dt>
+            <dd>Tostado</dd>
+          </div>
+          <div>
+            <dt data-stat="count" data-target="4.9" data-prefix="★ " data-decimals="1">0</dt>
+            <dd>Reseñas</dd>
+          </div>
+        </dl>
+
+      </div>
+      <div class="hero-quote anim-fade-up" style="--d:700ms" aria-label="Frase del equipo">
+        <blockquote>"Slow brew, slow life."</blockquote>
+        <cite>&mdash; Carolina, Barista Jefe</cite>
+      </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee-strip" aria-label="Lo que hacemos">
+      <div class="marquee-track">
+        <span>Single Origin</span><span>Tostado lento</span><span>Comercio justo</span>
+        <span>Repostería diaria</span><span>Cold brew 24h</span><span>Granos de temporada</span>
+        <span>Single Origin</span><span>Tostado lento</span><span>Comercio justo</span>
+        <span>Repostería diaria</span><span>Cold brew 24h</span><span>Granos de temporada</span>
+      </div>
+    </div>
+
+    <!-- HISTORIA -->
+    <section class="story" id="historia" aria-labelledby="story-title">
+      <!-- Imagen con forma: clip-path diagonal -->
+      <div class="s-img s-img--left js-reveal-img">
+        <img
+          src="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=900&q=80&auto=format&fit=crop"
+          alt="Interior cálido del salón de Aurora Café"
+          loading="lazy"
+        />
+        <div class="img-overlay"></div>
+      </div>
+      <div class="s-text js-reveal" data-dir="right">
+        <p class="eyebrow">Nuestra historia</p>
+        <h2 id="story-title">Un oficio paciente,<br />una taza a la vez.</h2>
+        <p>Empezamos en 2014 con un tostador de segunda mano y una idea simple: que cada visita supiera distinta. Hoy seleccionamos lotes de pequeños productores en Colombia, Etiopía y Guatemala, y los tostamos en tandas chicas para preservar su carácter.</p>
+        <p>Aquí el café no se apura. Se acompaña de conversación, de un buen libro o de esa primera luz de la mañana que todavía promete todo.</p>
+        <a class="link-italic" href="#granos">Conocé nuestros granos &rarr;</a>
+      </div>
+    </section>
+
+    <!-- DIVISOR -->
+    <div class="sec-wave dark-to-dark" aria-hidden="true"></div>
+
+    <!-- ESPECIALIDADES -->
+    <section class="especialidades" id="especialidades" aria-labelledby="esp-title">
+      <div class="esp-header js-reveal" data-dir="up">
+        <p class="eyebrow">La carta</p>
+        <h2 id="esp-title">Las especialidades<br /><em>de la casa.</em></h2>
+        <p class="esp-sub">Bebidas de autor preparadas con técnica y granos de origen. Permanentes, sin cambios.</p>
+      </div>
+
+      <div class="esp-grid">
+        <article class="esp-card js-reveal" data-dir="up" data-delay="0">
+          <div class="esp-card-flip" aria-label="Espresso de la casa">
+            <div class="esp-card-front">
+              <div class="esp-card-img">
+                <img src="https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=600&q=80&auto=format&fit=crop" alt="Espresso" loading="lazy" />
+              </div>
+              <div class="esp-card-body">
+                <span class="esp-tag">Nuestra firma</span>
+                <h3>Espresso de la casa</h3>
+                <p>Blend de tres orígenes. Notas de cacao, avellana tostada y final largo y limpio.</p>
+                <span class="esp-price">$3.20</span>
+              </div>
+            </div>
+            <div class="esp-card-back">
+              <div class="esp-card-back-inner">
+                <span class="esp-tag">Especial</span>
+                <h3>Espresso de la casa</h3>
+                <p>
+                  Preparado con doble extracción y molienda fina. Equilibrado, con cuerpo sedoso y un final limpio que invita a repetir.
+                </p>
+                <div class="esp-price esp-price--big">$3.20</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+
+        <article class="esp-card js-reveal" data-dir="up" data-delay="80">
+          <div class="esp-card-flip" aria-label="Cold Brew 24h">
+            <div class="esp-card-front">
+              <div class="esp-card-img">
+                <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&q=80&auto=format&fit=crop" alt="Cold brew" loading="lazy" />
+              </div>
+              <div class="esp-card-body">
+                <span class="esp-tag">Sin calor</span>
+                <h3>Cold Brew 24h</h3>
+                <p>Extracción lenta en frío durante 24 horas. Suave, bajo en acidez y final cítrico.</p>
+                <span class="esp-price">$5.00</span>
+              </div>
+            </div>
+            <div class="esp-card-back">
+              <div class="esp-card-back-inner">
+                <span class="esp-tag">24h de maceración</span>
+                <h3>Cold Brew 24h</h3>
+                <p>
+                  Elaborado con tueste medio y maceración lenta en frío durante 24 horas. Textura sedosa, acidez contenida y un final cítrico equilibrado.
+                </p>
+                <div class="esp-price esp-price--big">$5.00</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+
+        <article class="esp-card js-reveal" data-dir="up" data-delay="160">
+          <div class="esp-card-flip" aria-label="Latte de cardamomo">
+            <div class="esp-card-front">
+              <div class="esp-card-img">
+                <img src="https://images.unsplash.com/photo-1534687941688-651ccaafbff8?w=600&q=80&auto=format&fit=crop" alt="Latte cardamomo" loading="lazy" />
+              </div>
+              <div class="esp-card-body">
+                <span class="esp-tag">Bebida de autor</span>
+                <h3>Latte de cardamomo</h3>
+                <p>Espresso doble, leche texturizada e infusión de cardamomo verde. Oriental y reconfortante.</p>
+                <span class="esp-price">$5.20</span>
+              </div>
+            </div>
+            <div class="esp-card-back">
+              <div class="esp-card-back-inner">
+                <span class="esp-tag">Cardamomo verde</span>
+                <h3>Latte de cardamomo</h3>
+                <p>
+                  Preparado con espresso doble, leche texturizada al vapor y una infusión suave de cardamomo verde. Aroma cálido y final equilibrado.
+                </p>
+                <div class="esp-price esp-price--big">$5.20</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+
+        <article class="esp-card js-reveal" data-dir="up" data-delay="240">
+          <div class="esp-card-flip" aria-label="Filtro V60">
+            <div class="esp-card-front">
+              <div class="esp-card-img">
+                <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80&auto=format&fit=crop" alt="Filtro V60" loading="lazy" />
+              </div>
+              <div class="esp-card-body">
+                <span class="esp-tag">Método de goteo</span>
+                <h3>Filtro V60</h3>
+                <p>Preparado a mano, grano a grano. Servido a la mesa. Cambia según el lote del mes.</p>
+                <span class="esp-price">$4.80</span>
+              </div>
+            </div>
+            <div class="esp-card-back">
+              <div class="esp-card-back-inner">
+                <span class="esp-tag">Grano del mes</span>
+                <h3>Filtro V60</h3>
+                <p>
+                  Punteo manual y vertido en etapas para realzar acidez y claridad. El resultado cambia con el lote, siempre limpio y aromático.
+                </p>
+                <div class="esp-price esp-price--big">$4.80</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+
+        <article class="esp-card js-reveal" data-dir="up" data-delay="320">
+          <div class="esp-card-flip" aria-label="Flat White">
+            <div class="esp-card-front">
+              <div class="esp-card-img">
+                <img src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=600&q=80&auto=format&fit=crop" alt="Flat white" loading="lazy" />
+              </div>
+              <div class="esp-card-body">
+                <span class="esp-tag">Clásico de barra</span>
+                <h3>Flat White</h3>
+                <p>Doble ristretto con leche cremosa al punto exacto. Concentrado, sedoso y sin amargor.</p>
+                <span class="esp-price">$4.50</span>
+              </div>
+            </div>
+            <div class="esp-card-back">
+              <div class="esp-card-back-inner">
+                <span class="esp-tag">Leche cremosa</span>
+                <h3>Flat White</h3>
+                <p>
+                  Doble ristretto con microespuma de textura sedosa. Concentrado, redondo y con un final limpio que acompaña cualquier momento.
+                </p>
+                <div class="esp-price esp-price--big">$4.50</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+
+        <article class="esp-card js-reveal" data-dir="up" data-delay="400">
+          <div class="esp-card-flip" aria-label="Mocha de origen">
+            <div class="esp-card-front">
+              <div class="esp-card-img">
+                <img src="https://images.unsplash.com/photo-1579992357154-faf4bde95b3d?w=600&q=80&auto=format&fit=crop" alt="Mocha" loading="lazy" />
+              </div>
+              <div class="esp-card-body">
+                <span class="esp-tag">Con chocolate</span>
+                <h3>Mocha de origen</h3>
+                <p>Espresso de Etiopía, chocolate 70% de cacao y crema batida a mano. Intenso y equilibrado.</p>
+                <span class="esp-price">$5.40</span>
+              </div>
+            </div>
+            <div class="esp-card-back">
+              <div class="esp-card-back-inner">
+                <span class="esp-tag">Cacao 70%</span>
+                <h3>Mocha de origen</h3>
+                <p>
+                  Espresso de Etiopía, chocolate 70% de cacao y crema batida a mano. Complejo, intenso y con un final equilibrado.
+                </p>
+                <div class="esp-price esp-price--big">$5.40</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- DIVISOR -->
+    <div class="sec-wave dark-to-sand" aria-hidden="true"></div>
+
+    <!-- GRANOS -->
+    <section class="beans" id="granos" aria-labelledby="beans-title">
+      <div class="s-text js-reveal" data-dir="left">
+        <p class="eyebrow">Granos</p>
+        <h2 id="beans-title">Huila, Colombia &middot;<br />Lote La Esperanza</h2>
+        <p>Cosecha de noviembre, proceso lavado. En taza: panela, mandarina madura y un final limpio de cacao oscuro. Un lote de altura que llega directo del productor.</p>
+        <dl class="beans-specs" aria-label="Datos del grano">
+          <div><dt>Altitud</dt><dd>1.750 m</dd></div>
+          <div><dt>Variedad</dt><dd>Caturra</dd></div>
+          <div><dt>Proceso</dt><dd>Lavado</dd></div>
+          <div><dt>Tueste</dt><dd>Medio</dd></div>
+        </dl>
+        <a class="btn-dark" href="#visita">Preguntá en barra &rarr;</a>
+      </div>
+      <!-- Imagen con forma: clip-path espejo -->
+      <div class="s-img s-img--right js-reveal-img">
+        <img
+          src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=900&q=80&auto=format&fit=crop"
+          alt="Granos de café de especialidad"
+          loading="lazy"
+        />
+        <div class="img-overlay"></div>
+      </div>
+    </section>
+
+    <!-- DIVISOR -->
+    <div class="sec-wave sand-to-light" aria-hidden="true"></div>
+
+    <!-- REPOSTERÍA -->
+    <section class="bakery" id="reposteria" aria-labelledby="bakery-title">
+      <!-- Imagen a la IZQUIERDA — espejo de la sección de arriba -->
+      <div class="s-img s-img--bakery js-reveal-img">
+        <img
+          src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=900&q=80&auto=format&fit=crop"
+          alt="Croissant de mantequilla recién horneado"
+          loading="lazy"
+        />
+        <div class="img-overlay"></div>
+      </div>
+      <!-- Texto a la DERECHA -->
+      <div class="s-text js-reveal" data-dir="left">
+        <p class="eyebrow">Repostería</p>
+        <h2 id="bakery-title">Horneado cada mañana,<br />antes que la ciudad despierte.</h2>
+        <p>Croissants de mantequilla, banana bread, cookies de espresso y una tarta de temporada que cambia según el mercado. Todo de la mano de nuestra repostera, Marta, que llega a las 5 AM para que todo salga fresco.</p>
+        <div class="tags">
+          <span>Croissant</span>
+          <span>Banana Bread</span>
+          <span>Cookie espresso</span>
+          <span>Tarta del día</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIVISOR -->
+    <div class="sec-wave light-to-deep" aria-hidden="true"></div>
+
+    <!-- VISITA -->
+    <section id="visita" aria-labelledby="visit-title">
+      <div class="visit-hero">
+        <div class="visit-hero-bg">
+          <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=1400&q=80&auto=format&fit=crop" alt="Interior de Aurora Café" loading="lazy" />
+        </div>
+        <div class="visit-hero-text js-reveal" data-dir="up">
+          <p class="eyebrow">Visítanos</p>
+          <h2 id="visit-title">Te esperamos<br />con la primera taza<br /><em>recién hecha.</em></h2>
+          <div class="open-badge" id="open-badge" aria-live="polite">
+            <span class="pulse" id="open-pulse"></span>
+            <span id="open-text">Abierto ahora · Hasta las 20:00 hs</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="visit-body">
+        <div class="visit-info js-reveal" data-dir="up">
+          <p>Pasá sin avisar. Siempre hay lugar para uno más y el café siempre está recién preparado.</p>
+          <span class="amber-rule" aria-hidden="true"></span>
+          <div class="visit-detail-list" role="list">
+
+            <div class="visit-detail-row" role="listitem">
+              <span class="vd-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </span>
+              <span class="vd-label">Dirección</span>
+              <span class="vd-val"><a href="https://maps.google.com/?q=Obelisco+Buenos+Aires" target="_blank" rel="noopener">Av. Corrientes &amp; 9 de Julio, CABA</a></span>
+            </div>
+
+            <div class="visit-detail-row" role="listitem">
+              <span class="vd-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </span>
+              <span class="vd-label">Teléfono</span>
+              <span class="vd-val"><a href="tel:+541160001234">+54 11 6000 1234</a></span>
+            </div>
+
+            <div class="visit-detail-row" role="listitem">
+              <span class="vd-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+              </span>
+              <span class="vd-label">Email</span>
+              <span class="vd-val"><a href="mailto:hola@auroracafe.com">hola@auroracafe.com</a></span>
+            </div>
+
+            <div class="visit-detail-row" role="listitem">
+              <span class="vd-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+              </span>
+              <span class="vd-label">Cupping</span>
+              <span class="vd-val">Sábados 10:00 hs · Anotate en barra</span>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="visit-schedule js-reveal" data-dir="up" data-delay="120">
+          <p class="schedule-title">Horarios</p>
+          <div class="schedule-grid" role="list" aria-label="Horarios de apertura">
+            <div class="schedule-row" role="listitem">
+              <span class="schedule-day" data-days="1,2,3,4,5">Lunes – Viernes</span>
+              <span class="schedule-time">7:00 – 20:00 hs</span>
+              <div class="schedule-bar"><div class="schedule-bar-fill" style="--fill-w:72%"></div></div>
+            </div>
+            <div class="schedule-row" role="listitem">
+              <span class="schedule-day" data-days="6">Sábado</span>
+              <span class="schedule-time">8:00 – 21:00 hs</span>
+              <div class="schedule-bar"><div class="schedule-bar-fill" style="--fill-w:78%"></div></div>
+            </div>
+            <div class="schedule-row" role="listitem">
+              <span class="schedule-day" data-days="0">Domingo</span>
+              <span class="schedule-time">8:00 – 21:00 hs</span>
+              <div class="schedule-bar"><div class="schedule-bar-fill" style="--fill-w:78%"></div></div>
+            </div>
+          </div>
+          <div class="visit-map-wrap">
+            <iframe
+              class="visit-map-iframe"
+              title="Aurora Café — Obelisco, Buenos Aires"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3284.016842719546!2d-58.38375512346193!3d-34.60373397295395!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bccac630121623%3A0x4d1e73e3faa3e7e2!2sObelisco!5e0!3m2!1ses!2sar!4v1716000000000"
+              allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+            <a class="visit-map-cta" href="https://maps.google.com/?q=Obelisco+Buenos+Aires" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Cómo llegar
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer" role="contentinfo">
+      <div class="footer-sep" aria-hidden="true"></div>
+      <div class="footer-body">
+
+        <div class="footer-col footer-brand-block">
+          <div class="footer-logo">Aurora <span>·</span></div>
+          <p class="footer-tagline">Café de especialidad en Buenos Aires.<br />Granos de origen único, tostados a mano desde 2014.</p>
+          <div class="footer-social">
+            <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="https://spotify.com" target="_blank" rel="noopener" aria-label="Spotify">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+            </a>
+            <a href="mailto:hola@auroracafe.com" aria-label="Email">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <p class="footer-col-title">Navegar</p>
+          <ul class="footer-nav-list">
+            <li><a href="#historia">Nuestra historia</a></li>
+            <li><a href="#especialidades">Especialidades</a></li>
+            <li><a href="#granos">Granos</a></li>
+            <li><a href="#reposteria">Repostería</a></li>
+            <li><a href="#visita">Visítanos</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <p class="footer-col-title">Contacto</p>
+          <ul class="footer-contact-list">
+            <li class="footer-contact-item">
+              <span class="fc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+              <div class="fc-text"><span class="fc-label">Dirección</span><span class="fc-val">Av. Corrientes &amp; 9 de Julio, CABA</span></div>
+            </li>
+            <li class="footer-contact-item">
+              <span class="fc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+              <div class="fc-text"><span class="fc-label">Teléfono</span><a class="fc-val" href="tel:+541160001234">+54 11 6000 1234</a></div>
+            </li>
+            <li class="footer-contact-item">
+              <span class="fc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg></span>
+              <div class="fc-text"><span class="fc-label">Email</span><a class="fc-val" href="mailto:hola@auroracafe.com">hola@auroracafe.com</a></div>
+            </li>
+            <li class="footer-contact-item">
+              <span class="fc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+              <div class="fc-text"><span class="fc-label">Horario</span><span class="fc-val">Lun–Vie 7–20 hs &nbsp;·&nbsp; Sáb–Dom 8–21 hs</span></div>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">&copy; 2026 Aurora Café</p>
+        <div class="footer-bottom-center">
+          <span class="amber-dot" aria-hidden="true"></span>
+          <span>Buenos Aires, Argentina</span>
+          <span class="amber-dot" aria-hidden="true"></span>
+        </div>
+        <div class="footer-bottom-dev">
+          <span>Desarrollado por</span>
+          <a href="https://lucasweb.dev" target="_blank" rel="noopener">LucasWeb.Dev</a>
+        </div>
+
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
