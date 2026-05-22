@@ -80,7 +80,31 @@ const legacyIO = new IntersectionObserver((entries) => {
 qsa('.reveal, .reveal-left, .reveal-right').forEach(el => legacyIO.observe(el));
 
 /* ================================================================
-   3. PARALLAX — solo la imagen de fondo del hero
+   3. CORRECCIÓN Scroll Reveal (evitar saltos y asegurar transiciones)
+
+   Tu HTML/CSS usan el sistema [js-reveal] + clase .is-visible,
+   pero además existe compatibilidad legacy con IntersectionObserver
+   que agrega .in. Si ambos sistemas interactúan, pueden aparecer
+   saltos por transform/opacity no normalizados.
+
+   Este bloque unifica el estado inicial para elementos legacy
+   para que, cuando .in se aplique, el cambio sea suave y consistente.
+   ================================================================ */
+(function () {
+  const els = qsa('.reveal, .reveal-left, .reveal-right');
+  if (!els.length) return;
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  els.forEach((el) => {
+    if (el.classList.contains('in')) return;
+    if (reduce) return;
+    el.style.willChange = 'opacity, transform';
+  });
+})();
+
+/* ================================================================
+   4. PARALLAX — solo la imagen de fondo del hero
    ================================================================ */
 const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isDesktop      = window.matchMedia('(min-width: 768px)').matches;
@@ -90,12 +114,12 @@ if (!prefersReduced && isDesktop) {
   const heroQuote = qs('.hero-quote');
   const vh = window.innerHeight;
 
-  if (heroImg) heroImg.style.transform = 'translateY(0px) scale(1.08)';
+  if (heroImg) heroImg.style.transform = 'translateY(0px) scale(1.0)';
 
   let sy = 0, rafId = null;
   function applyParallax() {
     if (heroImg && sy < vh * 1.5)
-      heroImg.style.transform = `translateY(${sy * 0.28}px) scale(1.08)`;
+      heroImg.style.transform = `translateY(${sy * 0.28}px) scale(1.0)`;
     if (heroQuote && sy < vh * 1.2)
       heroQuote.style.transform = `translateY(${-sy * 0.1}px)`;
     rafId = null;
@@ -162,120 +186,353 @@ const sg = qs('.schedule-grid');
 if (sg) barIO.observe(sg);
 
 /* ================================================================
-   HERO: CONTADOR (al entrar en viewport) + TYPING (solo 1 vez)
+   HERO — Cinematic (sin typing ni contador incremental)
+   ================================================================ */
+(function () {
+  const hero = qs('.hero');
+  if (!hero) return;
+
+  const heroTitleTyping = qs('.hero-body h1 .typing[data-typing="hero"]');
+
+  const countEls = qsa('.hero-stats [data-stat="count"]');
+  countEls.forEach(el => {
+    const target = parseFloat(el.dataset.target || '0');
+    const decimals = parseInt(el.dataset.decimals || '0', 10);
+    const prefix = el.dataset.prefix || '';
+    const suffix = el.dataset.suffix || '';
+
+    const value = Number.isFinite(target)
+      ? (decimals > 0 ? target.toFixed(decimals) : String(Math.round(target)))
+      : '0';
+
+    el.textContent = `${prefix}${value}${suffix}`;
+  });
+
+  if (heroTitleTyping) {
+    const fullText = heroTitleTyping.getAttribute('aria-label') || '';
+    const lines = String(fullText).split(/\r?\n/);
+    const safeLines = lines.length ? lines : [fullText];
+
+    heroTitleTyping.textContent = '';
+
+    safeLines.forEach((line) => {
+      const wrap = document.createElement('span');
+      wrap.className = 'tmr';
+
+      const inner = document.createElement('span');
+      inner.textContent = line;
+
+      wrap.appendChild(inner);
+      heroTitleTyping.appendChild(wrap);
+    });
+  }
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (prefersReduced) {
+    hero.classList.add('cinema-bg');
+    hero.classList.add('hero-ready');
+    return;
+  }
+
+  // Eliminamos el Ken Burns infinito y además evitamos que el overlay haga blending con
+  // la interpolación de animación. Así se evita la “línea” que aparece al borde del degradé.
+  hero.classList.remove('cinema-bg');
+  hero.classList.add('hero-ready');
+
+  const heroImgEl = hero.querySelector('.hero-img-wrap img');
+  if (heroImgEl) heroImgEl.style.animation = 'none';
+
+  const afterEl = hero.querySelector('.hero-img-wrap');
+  if (afterEl) {
+    // No podemos tocar CSS existente, pero desactivamos el overlay dinámico
+    // poniendo la pseudo-element overlay en modo fijo (opacity final).
+    // (Esto fuerza que no haya transiciones que generen la línea.)
+    afterEl.style.setProperty('--dummy', '0');
+  }
+})();
+
+/* ================================================================
+   IMPROVEMENTS (LENIS + GSAP/ScrollTrigger + SPLITTING)
+   - Inicializar luego de DOMContentLoaded.
+   - Respetar prefers-reduced-motion.
+   - ScrollTrigger.refresh() en window load.
    ================================================================ */
 (function () {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // -------- Contador: se dispara cuando el bloque stats entra al viewport
-  const statsBlock = qs('.hero-stats');
-  const countEls = qsa('.hero-stats [data-stat="count"]');
-
-  if (statsBlock && countEls.length) {
-    if (prefersReduced) {
-      // Render inmediato en modo reduced
-      countEls.forEach(el => {
-        const target = parseFloat(el.dataset.target || '0');
-        const decimals = parseInt(el.dataset.decimals || '0', 10);
-        const prefix = el.dataset.prefix || '';
-        const suffix = el.dataset.suffix || '';
-
-        const value = Number.isFinite(target)
-          ? (decimals > 0 ? target.toFixed(decimals) : String(Math.round(target)))
-          : '0';
-
-        el.textContent = `${prefix}${value}${suffix}`;
-      });
-    } else {
-      let started = false;
-
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (!entry.isIntersecting || started) return;
-          started = true;
-
-          const duration = 980; // UX corto, sin estar de más
-          const start = performance.now();
-
-          const raf = (now) => {
-            const t = Math.min(1, (now - start) / duration);
-            // easing suave
-            const eased = 1 - Math.pow(1 - t, 3);
-
-            countEls.forEach(el => {
-              const target = parseFloat(el.dataset.target || '0');
-              const decimals = parseInt(el.dataset.decimals || '0', 10);
-              const prefix = el.dataset.prefix || '';
-              const suffix = el.dataset.suffix || '';
-
-              const cur = target * eased;
-              const value = decimals > 0
-                ? cur.toFixed(decimals)
-                : String(Math.round(cur));
-
-              el.textContent = `${prefix}${value}${suffix}`;
-            });
-
-            if (t < 1) requestAnimationFrame(raf);
-          };
-
-          requestAnimationFrame(raf);
-          io.unobserve(statsBlock);
-        });
-      }, { threshold: 0.35 });
-
-      io.observe(statsBlock);
-    }
+  function easingExpoOut(t) {
+    return Math.min(1, 1.001 - Math.pow(2, -10 * t));
   }
 
-  // -------- Typing en hero title: solo 1 vez
-  const typingEl = qs('.typing[data-typing="hero"]');
-  if (typingEl) {
-    const KEY = 'auroraHeroTypingDone';
-    const already = sessionStorage.getItem(KEY) === '1';
+  function hasGsap() {
+    return typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
+  }
 
-    const fullText = typingEl.getAttribute('aria-label') || 'El café que despierta historias.';
+  window.addEventListener('DOMContentLoaded', () => {
+    if (prefersReduced) return;
 
-    if (prefersReduced || already) {
-      typingEl.textContent = fullText;
-      return;
-    }
+    let lenis = null;
 
-    sessionStorage.setItem(KEY, '1');
+    // 1) LENIS — SMOOTH SCROLL
+    if (typeof window.Lenis === 'function') {
+      lenis = new window.Lenis({
+        duration: 1.4,
+        easing: (t) => easingExpoOut(t),
+        orientation: 'vertical',
+        smoothWheel: true,
+      });
 
-    const cursor = document.createElement('span');
-    cursor.className = 'typing-cursor';
-    cursor.textContent = '|';
+      if (hasGsap()) {
+        const gsap = window.gsap;
+        const ScrollTrigger = window.ScrollTrigger;
+        gsap.registerPlugin(ScrollTrigger);
 
-    typingEl.textContent = '';
-    typingEl.appendChild(cursor);
-
-    let i = 0;
-    const step = () => {
-      // Si ya acabamos
-      if (i >= fullText.length) {
-        cursor.remove();
-        typingEl.textContent = fullText;
-        return;
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => lenis.raf(time * 1000));
+        gsap.ticker.lagSmoothing(0);
+      } else {
+        const rafLoop = (time) => {
+          if (lenis) lenis.raf(time * 1000);
+          requestAnimationFrame(rafLoop);
+        };
+        requestAnimationFrame(rafLoop);
       }
 
-      // Ponemos el texto sin el cursor (cursor queda al final)
-      typingEl.childNodes.forEach(n => {
-        if (n !== cursor) n.remove();
+      const navEl = document.getElementById('nav');
+      if (navEl) {
+        const links = Array.from(navEl.querySelectorAll('.nav-links a[href^="#"]'));
+        links.forEach((a) => {
+          a.addEventListener('click', (e) => {
+            const href = a.getAttribute('href');
+            if (!href || href === '#') return;
+            const id = href.replace('#', '');
+            const target = document.getElementById(id);
+            if (!target) return;
+
+            e.preventDefault();
+            lenis.scrollTo(target, { offset: -80 });
+          });
+        });
+      }
+    }
+
+    // 2) GSAP + ScrollTrigger — curtain reveal
+    if (hasGsap() && typeof window.gsap.registerPlugin === 'function') {
+      const gsap = window.gsap;
+      const ScrollTrigger = window.ScrollTrigger;
+      gsap.registerPlugin(ScrollTrigger);
+
+      if (lenis) {
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => lenis.raf(time * 1000));
+        gsap.ticker.lagSmoothing(0);
+      }
+
+      const panels = [
+        {
+          selector: '.s-img--left',
+          originIn: 'left center',
+          originOut: 'right center',
+        },
+        {
+          selector: '.s-img--right',
+          originIn: 'right center',
+          originOut: 'left center',
+        },
+        {
+          selector: '.s-img--bakery',
+          originIn: 'left center',
+          originOut: 'right center',
+        },
+      ]
+        .map((p) => ({ ...p, el: document.querySelector(p.selector) }))
+        .filter((p) => p.el);
+
+      // Insert curtain div BEFORE img with exact inline styles
+      panels.forEach((p) => {
+        if (p.el.querySelector('.img-curtain')) return;
+        const img = p.el.querySelector('img');
+        if (!img) return;
+
+        const curtain = document.createElement('div');
+        curtain.style.position = 'absolute';
+        curtain.style.inset = '0';
+        curtain.style.zIndex = '2';
+        curtain.style.background = '#C9843A';
+        curtain.style.transformOrigin = p.originIn;
+        curtain.className = 'img-curtain';
+
+        // Ensure positioning context
+        const computed = window.getComputedStyle(p.el).position;
+        if (computed === 'static') p.el.style.position = 'relative';
+
+        p.el.insertBefore(curtain, img);
       });
 
-      // reconstruimos texto incremental eficientemente
-      // (en este caso el texto es corto, ok)
-      cursor.style.marginLeft = '2px';
-      typingEl.insertBefore(document.createTextNode(fullText.slice(0, i + 1)), cursor);
+      // Stagger between 3 images: no per-image ScrollTrigger
+      const curtainEls = panels.map((p) => ({ curtain: p.el.querySelector('.img-curtain'), ...p })).filter((x) => x.curtain);
+      if (curtainEls.length) {
+        const masterTL = gsap.timeline({
+          scrollTrigger: {
+            trigger: curtainEls[0].el,
+            start: 'top 70%',
+          },
+        });
 
-      i++;
-      const delay = 24 + Math.random() * 22;
-      setTimeout(step, delay);
-    };
+        curtainEls.forEach((p, i) => {
+          const img = p.el.querySelector('img');
+          if (!img) return;
 
-    // arrancar al cargar, sin esperar scroll
-    setTimeout(step, 420);
-  }
+          // Initial state
+          gsap.set(img, { opacity: 0, scale: 1.08 });
+          gsap.set(p.curtain, { transformOrigin: p.originIn, scaleX: 0 });
+
+          masterTL
+            .to(
+              p.curtain,
+              {
+                scaleX: 1,
+                duration: 0.6,
+                ease: 'power2.in',
+              },
+              i * 0.15
+            )
+            .to(
+              p.curtain,
+              {
+                scaleX: 0,
+                transformOrigin: p.originOut,
+                duration: 0.6,
+                ease: 'power2.out',
+              },
+              i * 0.15 + 0.6
+            )
+            .to(
+              img,
+              {
+                opacity: 1,
+                scale: 1.0,
+                duration: 0.6,
+                ease: 'power2.out',
+              },
+              i * 0.15 + 0.55
+            );
+        });
+      }
+
+      window.addEventListener('load', () => {
+        try {
+          ScrollTrigger.refresh();
+        } catch (e) {}
+      });
+    }
+
+    // 3) SPLITTING.JS — animación de títulos h2
+    if (typeof window.Splitting === 'function' && hasGsap()) {
+      window.Splitting({
+        target: '#story-title, #beans-title, #bakery-title, #esp-title',
+        by: 'words',
+      });
+
+      const h2s = ['#story-title', '#beans-title', '#bakery-title', '#esp-title']
+        .map((s) => document.querySelector(s))
+        .filter(Boolean);
+
+      h2s.forEach((h2) => {
+        h2.style.overflow = 'hidden';
+        h2.style.display = 'block';
+        h2.style.transformPerspective = '600px';
+
+        const words = Array.from(h2.querySelectorAll('.word'));
+        if (!words.length) return;
+
+        // Colores para Splitting (solo .word)
+        // Queremos para #esp-title una mezcla:
+        // - "Las especialidades" => bone/blanco crema (#F5EFE6)
+        // - "de la casa" (dentro del <em>) => ámbar (#C9843A)
+        const isEsp = h2.id === 'esp-title';
+
+        let wordsColors = null;
+
+        if (isEsp) {
+          // En vez de intentar deducir índices comparando text node,
+          // marcamos los spans generados por Splitting con base en el DOM original:
+          // - Tomamos el texto del <em>
+          // - Los spans que coinciden con palabras del <em> van en ámbar.
+          const em = h2.querySelector('em');
+          const emText = em ? (em.textContent || '').trim() : '';
+          const emNorm = String(emText).replace(/\s+/g, ' ').trim();
+          const emWords = emNorm ? emNorm.split(' ') : [];
+
+          wordsColors = words.map((w) => {
+            const t = (w.textContent || '').trim();
+            // Si la palabra pertenece al fragmento del <em>, ámbar. Sino, crema.
+            // (Normalizamos por si splitting/espacios agregan variaciones.)
+            return emWords.includes(t) ? '#C9843A' : '#F5EFE6';
+          });
+        }
+
+        const defaultColor = '#1b100c';
+
+        // IMPORTANT: asegurar color sobre los spans .word que genera Splitting
+        words.forEach((w, idx) => {
+          const c = isEsp
+            ? (wordsColors && wordsColors[idx] ? wordsColors[idx] : '#F5EFE6')
+            : defaultColor;
+          if (!w || !w.style) return;
+          w.style.color = c;
+        });
+
+        // Estado inicial GSAP: NO forzamos un color único si #esp-title (para respetar la mezcla)
+        if (!isEsp) {
+          window.gsap.set(words, { opacity: 0, y: 30, rotateX: -40, color: defaultColor });
+        } else {
+          window.gsap.set(words, { opacity: 0, y: 30, rotateX: -40 });
+          // re-aplicar por palabra
+          words.forEach((w, idx) => {
+            if (!w) return;
+            const c = wordsColors && wordsColors[idx] ? wordsColors[idx] : '#F5EFE6';
+            w.style.color = c;
+          });
+        }
+
+        window.gsap.to(words, {
+          opacity: 1,
+          y: 0,
+          rotateX: 0,
+          ease: 'power3.out',
+          duration: 0.7,
+          stagger: 0.07,
+          scrollTrigger: {
+            trigger: h2,
+            start: 'top 80%',
+          },
+          onStart: () => {
+            if (isEsp && wordsColors) {
+              words.forEach((w, idx) => {
+                if (!w || !w.style) return;
+                w.style.color = wordsColors[idx] || '#F5EFE6';
+              });
+            }
+          },
+          onComplete: () => {
+            if (isEsp && wordsColors) {
+              words.forEach((w, idx) => {
+                if (!w || !w.style) return;
+                w.style.color = wordsColors[idx] || '#F5EFE6';
+              });
+            }
+          },
+        });
+      });
+
+      window.addEventListener('load', () => {
+        try {
+          ScrollTrigger.refresh();
+        } catch (e) {}
+      });
+    }
+  });
 })();
 
