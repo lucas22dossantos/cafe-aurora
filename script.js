@@ -11,6 +11,8 @@
 const qs  = s => document.querySelector(s);
 const qsa = s => document.querySelectorAll(s);
 
+let globalLenis = null;
+
 /* ================================================================
    1. NAVBAR
    ================================================================ */
@@ -62,6 +64,21 @@ const revealIO = new IntersectionObserver((entries) => {
   });
 }, REVEAL_OPTS);
 
+function prepareStaggerReveal(selector, dir = 'up', step = 90, base = 0) {
+  qsa(selector).forEach((el, i) => {
+    if (el.hasAttribute('js-reveal')) return;
+    el.setAttribute('js-reveal', '');
+    el.dataset.dir = dir;
+    el.dataset.delay = String(base + i * step);
+  });
+}
+
+prepareStaggerReveal('.beans-specs > div', 'up', 80, 80);
+prepareStaggerReveal('.tags > span', 'up', 70, 120);
+prepareStaggerReveal('.visit-detail-row', 'right', 80, 120);
+prepareStaggerReveal('.schedule-row', 'left', 80, 100);
+prepareStaggerReveal('.footer-col', 'up', 110, 80);
+
 const imgIO = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (!entry.isIntersecting) return;
@@ -111,7 +128,6 @@ const isDesktop      = window.matchMedia('(min-width: 768px)').matches;
 
 if (!prefersReduced && isDesktop) {
   const heroImg   = qs('.hero-img-wrap img');
-  const heroQuote = qs('.hero-quote');
   const vh = window.innerHeight;
 
   if (heroImg) heroImg.style.transform = 'translateY(0px) scale(1.0)';
@@ -120,8 +136,6 @@ if (!prefersReduced && isDesktop) {
   function applyParallax() {
     if (heroImg && sy < vh * 1.5)
       heroImg.style.transform = `translateY(${sy * 0.28}px) scale(1.0)`;
-    if (heroQuote && sy < vh * 1.2)
-      heroQuote.style.transform = `translateY(${-sy * 0.1}px)`;
     rafId = null;
   }
   window.addEventListener('scroll', () => {
@@ -194,20 +208,6 @@ if (sg) barIO.observe(sg);
 
   const heroTitleTyping = qs('.hero-body h1 .typing[data-typing="hero"]');
 
-  const countEls = qsa('.hero-stats [data-stat="count"]');
-  countEls.forEach(el => {
-    const target = parseFloat(el.dataset.target || '0');
-    const decimals = parseInt(el.dataset.decimals || '0', 10);
-    const prefix = el.dataset.prefix || '';
-    const suffix = el.dataset.suffix || '';
-
-    const value = Number.isFinite(target)
-      ? (decimals > 0 ? target.toFixed(decimals) : String(Math.round(target)))
-      : '0';
-
-    el.textContent = `${prefix}${value}${suffix}`;
-  });
-
   if (heroTitleTyping) {
     const fullText = heroTitleTyping.getAttribute('aria-label') || '';
     const lines = String(fullText).split(/\r?\n/);
@@ -260,6 +260,7 @@ if (sg) barIO.observe(sg);
    ================================================================ */
 (function () {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let lenisGsapSynced = false;
 
   function easingExpoOut(t) {
     return Math.min(1, 1.001 - Math.pow(2, -10 * t));
@@ -277,13 +278,14 @@ if (sg) barIO.observe(sg);
     // 1) LENIS — SMOOTH SCROLL
     if (typeof window.Lenis === 'function') {
       lenis = new window.Lenis({
-        duration: 1.4,
+        duration: 0.82,
         easing: (t) => easingExpoOut(t),
         orientation: 'vertical',
         smoothWheel: true,
       });
+      globalLenis = lenis;
 
-      if (hasGsap()) {
+      if (hasGsap() && !lenisGsapSynced) {
         const gsap = window.gsap;
         const ScrollTrigger = window.ScrollTrigger;
         gsap.registerPlugin(ScrollTrigger);
@@ -291,6 +293,7 @@ if (sg) barIO.observe(sg);
         lenis.on('scroll', ScrollTrigger.update);
         gsap.ticker.add((time) => lenis.raf(time * 1000));
         gsap.ticker.lagSmoothing(0);
+        lenisGsapSynced = true;
       } else {
         const rafLoop = (time) => {
           if (lenis) lenis.raf(time * 1000);
@@ -311,7 +314,28 @@ if (sg) barIO.observe(sg);
             if (!target) return;
 
             e.preventDefault();
-            lenis.scrollTo(target, { offset: -80 });
+            lenis.scrollTo(target, {
+              offset: -72,
+              duration: 0.72,
+              easing: (t) => 1 - Math.pow(1 - t, 3),
+            });
+          });
+        });
+      }
+    } else {
+      const navEl = document.getElementById('nav');
+      if (navEl) {
+        const links = Array.from(navEl.querySelectorAll('.nav-links a[href^="#"]'));
+        links.forEach((a) => {
+          a.addEventListener('click', (e) => {
+            const href = a.getAttribute('href');
+            if (!href || href === '#') return;
+            const target = document.getElementById(href.replace('#', ''));
+            if (!target) return;
+
+            e.preventDefault();
+            const y = target.getBoundingClientRect().top + window.scrollY - 72;
+            window.scrollTo({ top: y, behavior: 'smooth' });
           });
         });
       }
@@ -323,10 +347,11 @@ if (sg) barIO.observe(sg);
       const ScrollTrigger = window.ScrollTrigger;
       gsap.registerPlugin(ScrollTrigger);
 
-      if (lenis) {
+      if (lenis && !lenisGsapSynced) {
         lenis.on('scroll', ScrollTrigger.update);
         gsap.ticker.add((time) => lenis.raf(time * 1000));
         gsap.ticker.lagSmoothing(0);
+        lenisGsapSynced = true;
       }
 
       const panels = [
@@ -536,3 +561,83 @@ if (sg) barIO.observe(sg);
   });
 })();
 
+/* ============================================================
+   7. LÓGICA DE MENÚ HAMBURGUESA MÓVIL
+   ============================================================ */
+window.addEventListener('DOMContentLoaded', () => {
+  const hamburgerBtn = document.getElementById('hamburger-btn');
+  const mobileNav = document.getElementById('mobile-nav');
+  const navHeader = document.getElementById('nav');
+  const mobileLinks = document.querySelectorAll('.mobile-nav-links a');
+
+  if (hamburgerBtn && mobileNav && navHeader) {
+    function openMobileMenu() {
+      hamburgerBtn.setAttribute('aria-expanded', 'true');
+      mobileNav.setAttribute('aria-hidden', 'false');
+      mobileNav.classList.add('is-active');
+      navHeader.classList.add('menu-open');
+      
+      // Bloquear scroll de fondo
+      if (globalLenis) {
+        globalLenis.stop();
+      } else {
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeMobileMenu() {
+      hamburgerBtn.setAttribute('aria-expanded', 'false');
+      mobileNav.setAttribute('aria-hidden', 'true');
+      mobileNav.classList.remove('is-active');
+      navHeader.classList.remove('menu-open');
+      
+      // Desbloquear scroll de fondo
+      if (globalLenis) {
+        globalLenis.start();
+      } else {
+        document.body.style.overflow = '';
+      }
+    }
+
+    hamburgerBtn.addEventListener('click', () => {
+      const isOpen = mobileNav.classList.contains('is-active');
+      if (isOpen) {
+        closeMobileMenu();
+      } else {
+        openMobileMenu();
+      }
+    });
+
+    // Cerrar menú al hacer clic en un enlace del menú móvil
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        
+        // Cerramos el menú de inmediato
+        closeMobileMenu();
+
+        // Si es un enlace de sección, nos desplazamos suavemente
+        if (href && href.startsWith('#')) {
+          const target = document.getElementById(href.replace('#', ''));
+          if (target) {
+            e.preventDefault();
+            
+            if (globalLenis) {
+              // Timeout para esperar que empiece a cerrar el panel
+              setTimeout(() => {
+                globalLenis.scrollTo(target, {
+                  offset: -72,
+                  duration: 0.72,
+                  easing: (t) => 1 - Math.pow(1 - t, 3),
+                });
+              }, 200);
+            } else {
+              const y = target.getBoundingClientRect().top + window.scrollY - 72;
+              window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+          }
+        }
+      });
+    });
+  }
+});
